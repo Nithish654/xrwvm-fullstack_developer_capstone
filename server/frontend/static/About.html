@@ -1,18 +1,24 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <!-- Link the style sheet here -->
+  <title>About Us</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/bootstrap.min.css">
 </head>
-<div>
+
+<body>
+
   <nav class="navbar navbar-expand-lg navbar-light" style="background-color:darkturquoise; height: 1in;">
     <div class="container-fluid">
       <h2 style="padding-right: 5%;">Dealerships</h2>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" style="font-size: larger;" aria-current="page" href="/">Home</a>
+            <a class="nav-link" style="font-size: larger;" href="/">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" style="font-size: larger;" href="/about">About Us</a>
@@ -24,45 +30,68 @@
       </div>
     </div>
   </nav>
-  
-    <div class="card" style="width: 80%;margin: auto; margin-top:5%;">
-      <div class="banner" name="about-header">
-      <!-- Insert header information here -->
-      </div>
-      <div style="display: flex;flex-direction: row; margin:auto">
+
+  <div class="card" style="width: 80%;margin: auto; margin-top:5%;">
+
+    <div class="banner" name="about-header">
+      <h1 style="text-align:center; padding-top:20px;">About Us</h1>
+      <p style="text-align:center; padding:10px 40px;">
+        Welcome to Best Cars Dealership India. We specialize in premium domestic and imported vehicles
+        across India, delivering trust, transparency, and top-quality customer service.
+        Our mission is to provide the best automotive experience with reliability and affordability.
+      </p>
+    </div>
+
+    <div style="display: flex;flex-direction: row; margin:auto; justify-content: space-around; padding:20px;">
+
+      <!-- Person 1 -->
       <div class="card" style="width: 30%;">
         <img class="card-img-top" src="/static/person.png" alt="Card image">
         <div class="card-body">
-          <p class="title">Person1</p>
-          <p>Person1 Title</p>
-          <p class="card-text">Some text that explains the person1 in about 2 short sentences</p>
-          <p>person1@example.com</p>
+          <p class="title">Nithish V J</p>
+          <p>Founder & Managing Director</p>
+          <p class="card-text">
+            Visionary leader with 8+ years of experience in the Indian automobile industry,
+            focused on customer satisfaction and transparent pricing.
+          </p>
+          <p>nithish@bestcarsindia.com</p>
+          <p>India</p>
         </div>
       </div>
 
+      <!-- Person 2 -->
       <div class="card" style="width: 30%;">
         <img class="card-img-top" src="/static/person.png" alt="Card image">
         <div class="card-body">
-          <p class="title">Person2</p>
-          <p>Person2 Title</p>
-          <p class="card-text">Some text that explains the person2 in about 2 short sentences</p>
-          <p>person2@example.com</p>
+          <p class="title">Rahul Sharma</p>
+          <p>Head of Sales</p>
+          <p class="card-text">
+            Expert in vehicle consultation and customer relationship management,
+            ensuring every client finds the perfect car.
+          </p>
+          <p>rahul@bestcarsindia.com</p>
+          <p>India</p>
         </div>
       </div>
 
+      <!-- Person 3 -->
       <div class="card" style="width: 30%;">
         <img class="card-img-top" src="/static/person.png" alt="Card image">
         <div class="card-body">
-          <p class="title">Person3</p>
-          <p>Person3 Title</p>
-          <p class="card-text">Some text that explains the person3 in about 2 short sentences</p>
-          <p>person3@example.com</p>
+          <p class="title">Priya Menon</p>
+          <p>Customer Experience Manager</p>
+          <p class="card-text">
+            Dedicated to providing exceptional after-sales support and service excellence
+            to customers across India.
+          </p>
+          <p>priya@bestcarsindia.com</p>
+          <p>India</p>
         </div>
       </div>
-    </div>
-    </div>
-    </div>
-    
-</div>
 
+    </div>
+
+  </div>
+
+</body>
 </html>
