@@ -15,7 +15,6 @@ SECRET_KEY = 'django-insecure-ccow$tz_=9%dxu4(0%^(z%nx32#s@(zt9$ih@)5l54yny)wm-0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# 🔥 IMPORTANT – Replace <YOUR_APP_URL> after running server
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
@@ -33,6 +32,7 @@ REST_FRAMEWORK = {
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',  # ✅ Added
     'djangoapp.apps.DjangoappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # ✅ Added at top
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,7 +58,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR,'frontend/static')
+            os.path.join(BASE_DIR, '../frontend/build')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -114,8 +115,11 @@ MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media')
 MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'frontend/static')
+    os.path.join(BASE_DIR, '../frontend/build/static')
 ]
+
+# Allow all origins (for development)
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Default primary key field type
 

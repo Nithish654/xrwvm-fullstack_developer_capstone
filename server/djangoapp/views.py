@@ -1,64 +1,107 @@
-# Uncomment the required imports before adding the code
-
-# from django.shortcuts import render
-# from django.http import HttpResponseRedirect, HttpResponse
-# from django.contrib.auth.models import User
-# from django.shortcuts import get_object_or_404, render, redirect
-# from django.contrib.auth import logout
-# from django.contrib import messages
-# from datetime import datetime
-
+from django.contrib.auth.models import User
+from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
-# from .populate import initiate
-
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
-# Create your views here.
-
-# Create a `login_request` view to handle sign in request
+# 🔐 LOGIN
 @csrf_exempt
 def login_user(request):
-    # Get username and password from request.POST dictionary
-    data = json.loads(request.body)
-    username = data['userName']
-    password = data['password']
-    # Try to check if provide credential can be authenticated
-    user = authenticate(username=username, password=password)
-    data = {"userName": username}
-    if user is not None:
-        # If user is valid, call login method to login current user
-        login(request, user)
-        data = {"userName": username, "status": "Authenticated"}
-    return JsonResponse(data)
+    if request.method == "POST":
+        data = json.loads(request.body)
+        username = data.get('userName')
+        password = data.get('password')
 
-# Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+        user = authenticate(username=username, password=password)
 
-# Create a `registration` view to handle sign up request
-# @csrf_exempt
-# def registration(request):
-# ...
+        if user is not None:
+            login(request, user)
+            return JsonResponse({
+                "userName": username,
+                "status": "Authenticated"
+            })
+        else:
+            return JsonResponse({
+                "userName": username,
+                "status": "Invalid credentials"
+            }, status=401)
+
+    return JsonResponse({"error": "POST request required"}, status=400)
+
+
+# 🚪 LOGOUT
+@csrf_exempt
+def logout_user(request):
+    if request.method == "POST":
+        logout(request)
+        return JsonResponse({"status": "Logged out"})
+    return JsonResponse({"error": "POST request required"}, status=400)
+
+
+# 📝 REGISTER
+@csrf_exempt
+def register_user(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        username = data.get("userName")
+        password = data.get("password")
+        email = data.get("email")
+
+        if User.objects.filter(username=username).exists():
+            return JsonResponse(
+                {"status": "User already exists"},
+                status=400
+            )
+
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email
+        )
+        user.save()
+
+        return JsonResponse({
+            "status": "User created successfully",
+            "userName": username
+        })
+
+    return JsonResponse({"error": "POST request required"}, status=400)
+
+
+# 👤 GET CURRENT LOGGED IN USER
+def get_user(request):
+    if request.user.is_authenticated:
+        return JsonResponse({
+            "userName": request.user.username,
+            "authenticated": True
+        })
+    else:
+        return JsonResponse({
+            "authenticated": False
+        })
 
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
 # def get_dealerships(request):
 # ...
 
+
 # Create a `get_dealer_reviews` view to render the reviews of a dealer
 # def get_dealer_reviews(request,dealer_id):
 # ...
 
+
 # Create a `get_dealer_details` view to render the dealer details
 # def get_dealer_details(request, dealer_id):
 # ...
+
 
 # Create a `add_review` view to submit a review
 # def add_review(request):
