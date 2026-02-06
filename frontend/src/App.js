@@ -8,14 +8,20 @@ function App() {
   const [userName, setUserName] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Check if already logged in (session check)
   useEffect(() => {
     fetch("/djangoapp/getuser")
       .then(res => res.json())
       .then(data => {
         if (data.authenticated) {
           setUserName(data.userName);
-          setLoggedIn(true);
+        } else {
+          setUserName(null);
         }
+        setLoading(false);
+      })
+      .catch(() => {
+        setUserName(null);
         setLoading(false);
       });
   }, []);
@@ -28,13 +34,18 @@ function App() {
   };
 
   if (loading) {
-    return <div style={{textAlign:"center", marginTop:"100px"}}>Loading...</div>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "100px" }}>
+        Loading...
+      </div>
+    );
   }
 
   return (
     <Router>
       <Routes>
 
+        {/* HOME */}
         <Route
           path="/"
           element={
@@ -49,6 +60,7 @@ function App() {
           }
         />
 
+        {/* LOGIN */}
         <Route
           path="/login"
           element={
@@ -60,6 +72,7 @@ function App() {
           }
         />
 
+        {/* REGISTER */}
         <Route
           path="/register"
           element={

@@ -87,6 +87,26 @@ def get_user(request):
             "authenticated": False
         })
 
+def get_cars(request):
+    try:
+        cars = CarModel.objects.all()
+        car_list = []
+
+        for car in cars:
+            car_list.append({
+                "id": car.id,
+                "car_make": car.car_make.name,
+                "dealer_id": car.dealer_id,
+                "name": car.name,
+                "type": car.type,
+                "year": car.year
+            })
+
+        return JsonResponse(car_list, safe=False)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships
 # def get_dealerships(request):
