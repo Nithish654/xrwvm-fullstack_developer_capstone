@@ -13,4 +13,11 @@ urlpatterns = [
     path('getuser', views.get_user, name='getuser'),
     path('get_cars', views.get_cars, name='get_cars'),
 
+    # 🚗 Dealers
+    path('get_dealers', views.get_dealers),
+    path('get_dealers/<str:state>', views.get_dealers),
+    path('dealer/<int:dealer_id>', views.get_dealer),
+    path('reviews/<int:dealer_id>', views.get_dealer_reviews),
+    path('add_review', views.add_review),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

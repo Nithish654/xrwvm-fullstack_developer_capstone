@@ -5,6 +5,7 @@ from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
+import requests  # ✅ ADDED
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -87,25 +88,114 @@ def get_user(request):
             "authenticated": False
         })
 
-def get_cars(request):
+
+# ==================================================
+# 🚗 DEALER APIs (CONNECT TO NODE SERVER)
+# ==================================================
+
+# ✅ GET ALL DEALERS OR BY STATE
+def get_dealers(request, state="All"):
+
+    if state == "All":
+        url = "http://localhost:3030/fetchDealers"
+    else:
+        url = f"http://localhost:3030/fetchDealers/{state}"
+
     try:
-        cars = CarModel.objects.all()
-        car_list = []
+        response = requests.get(url)
+        data = response.json()
 
-        for car in cars:
-            car_list.append({
-                "id": car.id,
-                "car_make": car.car_make.name,
-                "dealer_id": car.dealer_id,
-                "name": car.name,
-                "type": car.type,
-                "year": car.year
-            })
-
-        return JsonResponse(car_list, safe=False)
+        return JsonResponse({
+            "status": 200,
+            "dealers": data
+        })
 
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+        return JsonResponse({
+            "status": 500,
+            "error": str(e)
+        })
+
+
+# ✅ GET SINGLE DEALER
+def get_dealer(request, dealer_id):
+
+    url = f"http://localhost:3030/fetchDealer/{dealer_id}"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+
+        return JsonResponse({
+            "status": 200,
+            "dealer": data
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            "status": 500,
+            "error": str(e)
+        })
+
+
+# ✅ GET REVIEWS
+def get_dealer_reviews(request, dealer_id):
+
+    url = f"http://localhost:3030/fetchReviews/dealer/{dealer_id}"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+
+        return JsonResponse({
+            "status": 200,
+            "reviews": data
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            "status": 500,
+            "error": str(e)
+        })
+
+
+# ✅ ADD REVIEW
+@csrf_exempt
+def add_review(request):
+
+    if request.method == "POST":
+        try:
+            response = requests.post(
+                "http://localhost:3030/insert_review",
+                json=json.loads(request.body)
+            )
+
+            return JsonResponse({"status": 200})
+
+        except Exception as e:
+            return JsonResponse({
+                "status": 500,
+                "error": str(e)
+            })
+
+    return JsonResponse({"error": "POST required"}, status=400)
+
+
+# ✅ GET CARS (THIS WAS MISSING — VERY IMPORTANT)
+def get_cars(request):
+
+    try:
+        # If you don't have real car API, return empty list safely
+        return JsonResponse({
+            "status": 200,
+            "CarModels": []
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            "status": 500,
+            "error": str(e)
+        })
 
 # # Update the `get_dealerships` view to render the index page with
 # a list of dealerships

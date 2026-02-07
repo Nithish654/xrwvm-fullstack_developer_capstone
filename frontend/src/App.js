@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
+import Dealers from "./components/Dealers/Dealers.jsx";
+import Dealer from "./components/Dealers/Dealer.jsx";   // ✅ ADDED
 
 function App() {
 
@@ -45,15 +47,36 @@ function App() {
     <Router>
       <Routes>
 
-        {/* HOME */}
+        {/* HOME → redirect */}
         <Route
           path="/"
           element={
             userName ? (
-              <div style={{ textAlign: "center", marginTop: "100px" }}>
-                <h2>Welcome {userName}</h2>
-                <button onClick={handleLogout}>Logout</button>
-              </div>
+              <Navigate to="/dealers" />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        {/* DEALERS PAGE */}
+        <Route
+          path="/dealers"
+          element={
+            userName ? (
+              <Dealers userName={userName} onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        {/* ✅ SINGLE DEALER PAGE (ADDED) */}
+        <Route
+          path="/dealer/:id"
+          element={
+            userName ? (
+              <Dealer />
             ) : (
               <Navigate to="/login" />
             )
@@ -65,7 +88,7 @@ function App() {
           path="/login"
           element={
             userName ? (
-              <Navigate to="/" />
+              <Navigate to="/dealers" />
             ) : (
               <Login setUserName={setUserName} />
             )
@@ -77,7 +100,7 @@ function App() {
           path="/register"
           element={
             userName ? (
-              <Navigate to="/" />
+              <Navigate to="/dealers" />
             ) : (
               <Register />
             )
