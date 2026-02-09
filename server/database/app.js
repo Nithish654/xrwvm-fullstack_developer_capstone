@@ -5,7 +5,12 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const port = 3030;
+
+/*
+   🔥 IMPORTANT:
+   Allow Docker to override port
+*/
+const port = process.env.PORT || 3030;
 
 app.use(cors());
 app.use(express.json());
@@ -25,8 +30,30 @@ const dealerships_data = JSON.parse(
 /* ============================
    MONGODB CONNECTION
    ============================ */
-mongoose.connect("mongodb://localhost:27017/",  {
-  dbName: 'dealershipsDB'
+
+/*
+   🔥 IMPORTANT CHANGE:
+   If running inside Docker → use mongo_db
+   If running locally → fallback to localhost
+*/
+
+const MONGO_URL =
+  process.env.MONGO_URL || "mongodb://mongo-db:27017/dealershipsDB";
+
+mongoose.connect(MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+/*
+   🔥 Extra Debug Logs (Added Only)
+*/
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB connected successfully");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.log("MongoDB connection error:", err);
 });
 
 /* ============================
@@ -83,7 +110,7 @@ app.get('/fetchReviews/dealer/:id', async (req, res) => {
   }
 });
 
-// ✅ Fetch all dealerships
+// Fetch all dealerships
 app.get('/fetchDealers', async (req, res) => {
   try {
     const documents = await Dealerships.find();
@@ -93,7 +120,7 @@ app.get('/fetchDealers', async (req, res) => {
   }
 });
 
-// ✅ Fetch dealerships by state
+// Fetch dealerships by state
 app.get('/fetchDealers/:state', async (req, res) => {
   try {
     const documents = await Dealerships.find({
@@ -105,7 +132,7 @@ app.get('/fetchDealers/:state', async (req, res) => {
   }
 });
 
-// ✅ Fetch dealership by id
+// Fetch dealership by id
 app.get('/fetchDealer/:id', async (req, res) => {
   try {
     const document = await Dealerships.findOne({
@@ -147,6 +174,11 @@ app.post('/insert_review', async (req, res) => {
 /* ============================
    START SERVER
    ============================ */
-app.listen(port, () => {
+
+/*
+   🔥 IMPORTANT:
+   0.0.0.0 required for Docker
+*/
+app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
 });
