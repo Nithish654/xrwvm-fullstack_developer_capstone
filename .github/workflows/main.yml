@@ -26,13 +26,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8
 
-      - name: Print working directory
-        run: pwd
-
       - name: Run Linter
         run: |
-          pwd
-          find . -name "*.py" -exec flake8 --max-line-length=120 --ignore=E302,E501,F841 {} +
+          find . -name "*.py" -not -path "*/venv/*" -exec flake8 --max-line-length=120 --ignore=E302,E501,F841 {} +
           echo "Linted all the python files successfully"
 
   lint_js:
@@ -53,5 +49,5 @@ jobs:
 
       - name: Run Linter
         run: |
-          find ./server/database -name "*.js" -exec jshint {} +
-          echo "Linted all the js files successfully"
+          find ./server/database -path "*/node_modules/*" -prune -o -name "*.js" -print | xargs jshint
+          echo "Linted JS files successfully"
